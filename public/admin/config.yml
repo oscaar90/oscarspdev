@@ -2,10 +2,9 @@ backend:
   name: github
   repo: oscaar90/oscarspdev
   branch: main
-  auth_type: oauth
-  app_id: Ov23liLTTVL36gdw0YQO
-  base_url: https://oscarsp.netlify.app
-  auth_endpoint: /admin/auth
+  auth:
+    type: implicit
+    app_id: Ov23liLTTVL36gdw0YQO
 
 media_folder: "public/uploads"
 public_folder: "/uploads"
