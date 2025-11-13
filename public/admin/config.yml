@@ -46,6 +46,8 @@ collections:
     folder: "src/content/notes"
     create: true
     slug: "{{slug}}"
+    identifier_field: "pubDate"
+    summary: "{{pubDate}} – {{body}}"
     fields:
       - { label: "Texto", name: "body", widget: "markdown" }
       - { label: "Fecha", name: "pubDate", widget: "datetime" }
