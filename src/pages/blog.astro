@@ -1,0 +1,313 @@
+---
+import BlogLayout from '../layouts/BlogLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('blog', ({ data }) => {
+  return data.draft !== true;
+});
+
+const sortedPosts = allPosts.sort((a, b) => 
+  new Date(b.data.publishDate).getTime() - new Date(a.data.publishDate).getTime()
+);
+
+const postsByCategory = {
+  ctf: allPosts.filter(post => post.data.category === 'ctf'),
+  ai: allPosts.filter(post => post.data.category === 'ai'),
+  automation: allPosts.filter(post => post.data.category === 'automation'),
+  cybersecurity: allPosts.filter(post => post.data.category === 'cybersecurity'),
+  tools: allPosts.filter(post => post.data.category === 'tools')
+};
+---
+
+<BlogLayout title="Blog" description="Todos los posts sobre automatización, IA, ciberseguridad y CTFs">
+  <div class="blog-page">
+    <div class="container">
+      <div class="page-header">
+        <h1 class="page-title gradient-text animate-fade-in-up">Blog & Noticias</h1>
+        <p class="page-subtitle animate-fade-in-up">
+          Todas las noticias, posts y actualizaciones técnicas organizadas por categorías
+        </p>
+      </div>
+
+      <div class="blog-stats glass-card animate-fade-in-up">
+        <div class="stat">
+          <div class="stat-number gradient-text">{sortedPosts.length}</div>
+          <div class="stat-label">Posts & Noticias</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number gradient-text">{postsByCategory.ctf.length}</div>
+          <div class="stat-label">CTF Writeups</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number gradient-text">{postsByCategory.ai.length + postsByCategory.automation.length}</div>
+          <div class="stat-label">Posts IA & Automatización</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number gradient-text">{postsByCategory.cybersecurity.length + postsByCategory.tools.length}</div>
+          <div class="stat-label">Posts Ciberseguridad & Herramientas</div>
+        </div>
+      </div>
+
+      <section class="posts-section">
+        <h2 class="section-title">Todas las Noticias y Posts</h2>
+        <div class="posts-grid">
+          {sortedPosts.map((post, index) => (
+            <article class="post-card glass-card animate-fade-in-up" style={`animation-delay: ${index * 0.1}s`}>
+              <div class="card-header">
+                <span class="category-tag" data-category={post.data.category}>
+                  {post.data.category.toUpperCase()}
+                </span>
+                <time class="post-date" datetime={post.data.publishDate.toISOString()}>
+                  {post.data.publishDate.toLocaleDateString('es-ES', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                  })}
+                </time>
+              </div>
+              
+              <h3 class="post-title">
+                <a href={`/blog/${post.slug}`}>{post.data.title}</a>
+              </h3>
+              
+              <p class="post-description">{post.data.description}</p>
+              
+              <div class="post-footer">
+                <div class="tags">
+                  {post.data.tags.slice(0, 3).map(tag => (
+                    <span class="tag">#{tag}</span>
+                  ))}
+                </div>
+                {post.data.readingTime && (
+                  <span class="reading-time">{post.data.readingTime}</span>
+                )}
+              </div>
+            </article>
+          ))}
+        </div>
+        
+        {sortedPosts.length === 0 && (
+          <div class="empty-state">
+            <div class="empty-icon">📝</div>
+            <h3>Próximamente...</h3>
+            <p>Estoy preparando contenido técnico de calidad. ¡Vuelve pronto!</p>
+          </div>
+        )}
+      </section>
+    </div>
+  </div>
+</BlogLayout>
+
+<style>
+  .blog-page {
+    padding: var(--spacing-2xl) 0;
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+  }
+
+  .page-title {
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-weight: 700;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .page-subtitle {
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .blog-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--spacing-lg);
+    padding: var(--spacing-xl);
+    margin-bottom: var(--spacing-2xl);
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .stat-label {
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+
+  .section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+  }
+
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-2xl);
+  }
+
+  .post-card {
+    padding: var(--spacing-xl);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .post-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .category-tag {
+    padding: 6px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .category-tag[data-category="ctf"] {
+    background: rgba(239, 68, 68, 0.2);
+    color: #FCA5A5;
+  }
+
+  .category-tag[data-category="ai"] {
+    background: rgba(139, 92, 246, 0.2);
+    color: #C4B5FD;
+  }
+
+  .category-tag[data-category="automation"] {
+    background: rgba(59, 130, 246, 0.2);
+    color: #93C5FD;
+  }
+
+  .category-tag[data-category="cybersecurity"] {
+    background: rgba(34, 197, 94, 0.2);
+    color: #86EFAC;
+  }
+
+  .category-tag[data-category="tools"] {
+    background: rgba(245, 158, 11, 0.2);
+    color: #FCD34D;
+  }
+
+  .post-date {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+  }
+
+  .post-title {
+    margin-bottom: var(--spacing-md);
+  }
+
+  .post-title a {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.3;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .post-title a:hover {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .post-description {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .post-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+  }
+
+  .tags {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 4px 8px;
+    background: var(--bg-glass);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-sm);
+  }
+
+  .reading-time {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+  }
+
+  .empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: var(--spacing-2xl);
+    color: var(--text-muted);
+  }
+
+  .empty-icon {
+    font-size: 4rem;
+    margin-bottom: var(--spacing-lg);
+    opacity: 0.5;
+  }
+
+  .empty-state h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-md);
+    color: var(--text-primary);
+  }
+
+  @media (max-width: 768px) {
+    .posts-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .blog-stats {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .blog-stats {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

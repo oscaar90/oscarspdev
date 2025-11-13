@@ -1,0 +1,467 @@
+---
+import BlogLayout from '../layouts/BlogLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('blog', ({ data }) => {
+  return data.draft !== true && data.type === 'project';
+});
+
+const projectsByCategory = {
+  automation: allPosts.filter(post => post.data.category === 'automation'),
+  ai: allPosts.filter(post => post.data.category === 'ai'),
+  tools: allPosts.filter(post => post.data.category === 'tools')
+};
+---
+
+<BlogLayout title="Proyectos" description="Explora mis proyectos de automatización, IA y herramientas personalizadas">
+  <div class="projects-page">
+    <div class="container">
+      <div class="page-header">
+        <h1 class="page-title gradient-text animate-fade-in-up">Proyectos</h1>
+        <p class="page-subtitle animate-fade-in-up">
+          Una colección de proyectos de automatización, inteligencia artificial y herramientas personalizadas
+        </p>
+      </div>
+
+      <div class="projects-stats glass-card animate-fade-in-up">
+        <div class="stat">
+          <div class="stat-number gradient-text">{allPosts.length}</div>
+          <div class="stat-label">Proyectos Totales</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number gradient-text">{projectsByCategory.automation.length}</div>
+          <div class="stat-label">Automatización</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number gradient-text">{projectsByCategory.ai.length}</div>
+          <div class="stat-label">Inteligencia Artificial</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number gradient-text">{projectsByCategory.tools.length}</div>
+          <div class="stat-label">Herramientas</div>
+        </div>
+      </div>
+
+      <section class="category-section">
+        <h2 class="category-title">
+          <span class="category-icon">🤖</span>
+          Inteligencia Artificial
+        </h2>
+        <p class="category-description">
+          Proyectos de IA local, machine learning y automatización inteligente
+        </p>
+        
+        <div class="projects-grid">
+          {projectsByCategory.ai.map((project, index) => (
+            <article class="project-card glass-card animate-fade-in-up" style={`animation-delay: ${index * 0.1}s`}>
+              <div class="card-header">
+                <span class="category-tag" data-category="ai">IA</span>
+                <time class="project-date">
+                  {project.data.publishDate.toLocaleDateString('es-ES', { 
+                    year: 'numeric', 
+                    month: 'short' 
+                  })}
+                </time>
+              </div>
+              
+              <h3 class="project-title">
+                <a href={`/blog/${project.slug}`}>{project.data.title}</a>
+              </h3>
+              
+              <p class="project-description">{project.data.description}</p>
+              
+              <div class="project-footer">
+                <div class="tags">
+                  {project.data.tags.slice(0, 3).map(tag => (
+                    <span class="tag">#{tag}</span>
+                  ))}
+                </div>
+                {project.data.readingTime && (
+                  <span class="reading-time">{project.data.readingTime}</span>
+                )}
+              </div>
+            </article>
+          ))}
+          
+          {projectsByCategory.ai.length === 0 && (
+            <div class="empty-state">
+              <div class="empty-icon">🧠</div>
+              <p>Próximamente más proyectos de IA...</p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section class="category-section">
+        <h2 class="category-title">
+          <span class="category-icon">⚡</span>
+          Automatización
+        </h2>
+        <p class="category-description">
+          Scripts, sistemas y herramientas para automatizar procesos cotidianos
+        </p>
+        
+        <div class="projects-grid">
+          {projectsByCategory.automation.map((project, index) => (
+            <article class="project-card glass-card animate-fade-in-up" style={`animation-delay: ${index * 0.1}s`}>
+              <div class="card-header">
+                <span class="category-tag" data-category="automation">AUTOMATIZACIÓN</span>
+                <time class="project-date">
+                  {project.data.publishDate.toLocaleDateString('es-ES', { 
+                    year: 'numeric', 
+                    month: 'short' 
+                  })}
+                </time>
+              </div>
+              
+              <h3 class="project-title">
+                <a href={`/blog/${project.slug}`}>{project.data.title}</a>
+              </h3>
+              
+              <p class="project-description">{project.data.description}</p>
+              
+              <div class="project-footer">
+                <div class="tags">
+                  {project.data.tags.slice(0, 3).map(tag => (
+                    <span class="tag">#{tag}</span>
+                  ))}
+                </div>
+                {project.data.readingTime && (
+                  <span class="reading-time">{project.data.readingTime}</span>
+                )}
+              </div>
+            </article>
+          ))}
+          
+          {projectsByCategory.automation.length === 0 && (
+            <div class="empty-state">
+              <div class="empty-icon">🔧</div>
+              <p>Próximamente más proyectos de automatización...</p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section class="category-section">
+        <h2 class="category-title">
+          <span class="category-icon">🛠️</span>
+          Herramientas
+        </h2>
+        <p class="category-description">
+          Utilidades personalizadas y herramientas de productividad
+        </p>
+        
+        <div class="projects-grid">
+          {projectsByCategory.tools.map((project, index) => (
+            <article class="project-card glass-card animate-fade-in-up" style={`animation-delay: ${index * 0.1}s`}>
+              <div class="card-header">
+                <span class="category-tag" data-category="tools">HERRAMIENTAS</span>
+                <time class="project-date">
+                  {project.data.publishDate.toLocaleDateString('es-ES', { 
+                    year: 'numeric', 
+                    month: 'short' 
+                  })}
+                </time>
+              </div>
+              
+              <h3 class="project-title">
+                <a href={`/blog/${project.slug}`}>{project.data.title}</a>
+              </h3>
+              
+              <p class="project-description">{project.data.description}</p>
+              
+              <div class="project-footer">
+                <div class="tags">
+                  {project.data.tags.slice(0, 3).map(tag => (
+                    <span class="tag">#{tag}</span>
+                  ))}
+                </div>
+                {project.data.readingTime && (
+                  <span class="reading-time">{project.data.readingTime}</span>
+                )}
+              </div>
+            </article>
+          ))}
+          
+          {projectsByCategory.tools.length === 0 && (
+            <div class="empty-state">
+              <div class="empty-icon">⚙️</div>
+              <p>Próximamente más herramientas...</p>
+            </div>
+          )}
+        </div>
+      </section>
+
+
+    </div>
+  </div>
+</BlogLayout>
+
+<style>
+  .projects-page {
+    padding: var(--spacing-2xl) 0;
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+  }
+
+  .page-title {
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-weight: 700;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .page-subtitle {
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .projects-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--spacing-lg);
+    padding: var(--spacing-xl);
+    margin-bottom: var(--spacing-2xl);
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .stat-label {
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+
+  .category-section {
+    margin-bottom: var(--spacing-2xl);
+  }
+
+  .category-title {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .category-icon {
+    font-size: 2rem;
+  }
+
+  .category-description {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xl);
+    width: 100%;
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-2xl);
+  }
+
+  .project-card {
+    padding: var(--spacing-xl);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .project-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .category-tag {
+    padding: 4px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .category-tag[data-category="ai"] {
+    background: rgba(139, 92, 246, 0.2);
+    color: #C4B5FD;
+  }
+
+  .category-tag[data-category="automation"] {
+    background: rgba(59, 130, 246, 0.2);
+    color: #93C5FD;
+  }
+
+  .category-tag[data-category="tools"] {
+    background: rgba(245, 158, 11, 0.2);
+    color: #FCD34D;
+  }
+
+  .project-date {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+  }
+
+  .project-title {
+    margin-bottom: var(--spacing-md);
+  }
+
+  .project-title a {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.3;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .project-title a:hover {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .project-description {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .project-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+  }
+
+  .tags {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .reading-time {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+  }
+
+  .empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: var(--spacing-2xl);
+    color: var(--text-muted);
+  }
+
+  .empty-icon {
+    font-size: 4rem;
+    margin-bottom: var(--spacing-lg);
+    opacity: 0.5;
+  }
+
+  .cta-section {
+    margin-top: var(--spacing-2xl);
+  }
+
+  .cta-content {
+    text-align: center;
+    padding: var(--spacing-2xl);
+  }
+
+  .cta-content h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .cta-content p {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0 auto var(--spacing-xl);
+    line-height: 1.6;
+  }
+
+  .cta-actions {
+    display: flex;
+    gap: var(--spacing-lg);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-primary);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .btn-secondary:hover {
+    color: var(--text-primary);
+    border-color: var(--border-secondary);
+    background: var(--bg-glass);
+  }
+
+  @media (max-width: 768px) {
+    .projects-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .projects-stats {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .cta-actions {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .projects-stats {
+      grid-template-columns: 1fr;
+    }
+
+    .category-title {
+      flex-wrap: wrap;
+    }
+  }
+</style>

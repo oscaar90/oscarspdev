@@ -1,0 +1,662 @@
+---
+import { type CollectionEntry, getCollection } from 'astro:content';
+import BlogLayout from '../../layouts/BlogLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: post,
+  }));
+}
+
+type Props = CollectionEntry<'blog'>;
+
+const post = Astro.props;
+const { Content } = await post.render();
+
+// Posts relacionados (misma categoría)
+const allPosts = await getCollection('blog', ({ data }) => {
+  return data.draft !== true;
+});
+
+const relatedPosts = allPosts
+  .filter(p => p.slug !== post.slug && p.data.category === post.data.category)
+  .sort(() => Math.random() - 0.5)
+  .slice(0, 3);
+---
+
+<BlogLayout title={post.data.title} frontmatter={post.data}>
+  <article class="blog-post">
+    <div class="container">
+      <!-- Post Header -->
+      <header class="post-header">
+        <!-- Breadcrumbs -->
+        <nav class="breadcrumbs">
+          <a href="/" class="breadcrumb-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            </svg>
+            Inicio
+          </a>
+          <span class="breadcrumb-separator">/</span>
+          {post.data.category === 'ctf' && (
+            <a href="/ctfs" class="breadcrumb-link">CTFs</a>
+          )}
+          {(post.data.category === 'ai' || post.data.category === 'automation' || post.data.category === 'tools') && (
+            <a href="/projects" class="breadcrumb-link">Proyectos</a>
+          )}
+          {post.data.category === 'cybersecurity' && (
+            <a href="/ciberseguridad" class="breadcrumb-link">Ciberseguridad</a>
+          )}
+          <span class="breadcrumb-separator">/</span>
+          <span class="breadcrumb-current">{post.data.title}</span>
+        </nav>
+
+        <div class="post-meta">
+          <span class="category-tag" data-category={post.data.category}>
+            {post.data.category.toUpperCase()}
+          </span>
+          <time class="post-date" datetime={post.data.publishDate.toISOString()}>
+            {post.data.publishDate.toLocaleDateString('es-ES', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            })}
+          </time>
+          {post.data.readingTime && (
+            <span class="reading-time">{post.data.readingTime}</span>
+          )}
+        </div>
+        
+        <h1 class="post-title gradient-text animate-fade-in-up">
+          {post.data.title}
+        </h1>
+        
+        <p class="post-description animate-fade-in-up">
+          {post.data.description}
+        </p>
+        
+        <div class="post-tags">
+          {post.data.tags.map(tag => (
+            <span class="tag">#{tag}</span>
+          ))}
+        </div>
+      </header>
+
+      <!-- Post Content -->
+      <div class="post-content glass-card">
+        <Content />
+      </div>
+
+      <!-- Post Footer -->
+      <footer class="post-footer">
+        <div class="author-section glass-card">
+          <div class="author-info">
+            <div class="author-avatar">
+              <div class="avatar-placeholder">👨‍💻</div>
+            </div>
+            <div class="author-details">
+              <h3>Sobre el autor</h3>
+              <p>
+                Automatizo procesos, diseño herramientas útiles y meto IA donde aporta, no donde vende. Siempre en local, sin depender de nadie.
+              </p>
+              <div class="author-links">
+                <a href="/about" class="author-link">Más sobre mí</a>
+                <a href="https://github.com/oscaar90" target="_blank" rel="noopener" class="author-link">
+                  GitHub
+                </a>
+                <a href="https://www.linkedin.com/in/oscar-sanchez-perez/" target="_blank" rel="noopener" class="author-link">
+                  LinkedIn
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="post-navigation">
+          {post.data.category === 'ctf' && (
+            <a href="/ctfs" class="nav-back">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="m15 18-6-6 6-6"/>
+              </svg>
+              Volver a CTFs
+            </a>
+          )}
+          {(post.data.category === 'ai' || post.data.category === 'automation' || post.data.category === 'tools') && (
+            <a href="/projects" class="nav-back">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="m15 18-6-6 6-6"/>
+              </svg>
+              Volver a Proyectos
+            </a>
+          )}
+          {post.data.category === 'cybersecurity' && (
+            <a href="/ciberseguridad" class="nav-back">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="m15 18-6-6 6-6"/>
+              </svg>
+              Volver a Ciberseguridad
+            </a>
+          )}
+        </nav>
+      </footer>
+
+      <!-- Related Posts -->
+      {relatedPosts.length > 0 && (
+        <section class="related-posts">
+          <h2 class="section-title">Posts Relacionados</h2>
+          <div class="related-grid">
+            {relatedPosts.map((relatedPost) => (
+              <article class="related-card glass-card">
+                <div class="card-header">
+                  <span class="category-tag" data-category={relatedPost.data.category}>
+                    {relatedPost.data.category}
+                  </span>
+                  <time class="post-date">
+                    {relatedPost.data.publishDate.toLocaleDateString('es-ES', {
+                      month: 'short',
+                      day: 'numeric'
+                    })}
+                  </time>
+                </div>
+                
+                <h3 class="related-title">
+                  <a href={`/blog/${relatedPost.slug}`}>{relatedPost.data.title}</a>
+                </h3>
+                
+                <p class="related-description">{relatedPost.data.description}</p>
+                
+                <div class="related-footer">
+                  <div class="tags">
+                    {relatedPost.data.tags.slice(0, 2).map(tag => (
+                      <span class="tag">#{tag}</span>
+                    ))}
+                  </div>
+                  {relatedPost.data.readingTime && (
+                    <span class="reading-time">{relatedPost.data.readingTime}</span>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+    </div>
+  </article>
+</BlogLayout>
+
+<style>
+  .blog-post {
+    padding: var(--spacing-2xl) 0;
+  }
+
+  /* Breadcrumbs */
+  .breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-xl);
+    font-size: 0.9rem;
+    flex-wrap: wrap;
+  }
+
+  .breadcrumb-link {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+  }
+
+  .breadcrumb-link:hover {
+    color: var(--text-primary);
+    background: var(--bg-glass);
+  }
+
+  .breadcrumb-separator {
+    color: var(--text-muted);
+    font-weight: 300;
+  }
+
+  .breadcrumb-current {
+    color: var(--text-muted);
+    font-weight: 500;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .post-header {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .post-meta {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+    flex-wrap: wrap;
+  }
+
+  .category-tag {
+    padding: 6px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .category-tag[data-category="ctf"] {
+    background: rgba(239, 68, 68, 0.2);
+    color: #FCA5A5;
+  }
+
+  .category-tag[data-category="ai"] {
+    background: rgba(139, 92, 246, 0.2);
+    color: #C4B5FD;
+  }
+
+  .category-tag[data-category="automation"] {
+    background: rgba(59, 130, 246, 0.2);
+    color: #93C5FD;
+  }
+
+  .category-tag[data-category="cybersecurity"] {
+    background: rgba(34, 197, 94, 0.2);
+    color: #86EFAC;
+  }
+
+  .category-tag[data-category="tools"] {
+    background: rgba(245, 158, 11, 0.2);
+    color: #FCD34D;
+  }
+
+  .post-date {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  .reading-time {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  .post-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .post-description {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-xl);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .post-tags {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 4px 12px;
+    background: var(--bg-glass);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+  }
+
+  .tag:hover {
+    color: var(--text-primary);
+    border-color: var(--border-secondary);
+  }
+
+  .post-content {
+    max-width: 1000px;
+    margin: 0 auto var(--spacing-2xl);
+    padding: var(--spacing-2xl);
+  }
+
+  /* Estilos para el contenido Markdown */
+  .post-content :global(h1),
+  .post-content :global(h2),
+  .post-content :global(h3),
+  .post-content :global(h4),
+  .post-content :global(h5),
+  .post-content :global(h6) {
+    color: var(--text-primary);
+    font-weight: 600;
+    line-height: 1.3;
+    margin-top: var(--spacing-xl);
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .post-content :global(h1) {
+    font-size: 2.5rem;
+    border-bottom: 2px solid var(--border-primary);
+    padding-bottom: var(--spacing-md);
+  }
+
+  .post-content :global(h2) {
+    font-size: 2rem;
+    color: var(--text-primary);
+  }
+
+  .post-content :global(h3) {
+    font-size: 1.5rem;
+  }
+
+  .post-content :global(p) {
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin-bottom: var(--spacing-lg);
+    font-size: 1.1rem;
+  }
+
+  .post-content :global(a) {
+    color: #93C5FD;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(147, 197, 253, 0.3);
+    transition: all 0.2s ease;
+  }
+
+  .post-content :global(a:hover) {
+    color: #DBEAFE;
+    border-bottom-color: rgba(219, 234, 254, 0.6);
+    background: rgba(147, 197, 253, 0.1);
+    padding: 2px 4px;
+    border-radius: 3px;
+  }
+
+  .post-content :global(ul),
+  .post-content :global(ol) {
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: var(--spacing-lg);
+    padding-left: var(--spacing-xl);
+  }
+
+  .post-content :global(li) {
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .post-content :global(blockquote) {
+    border-left: 4px solid var(--border-primary);
+    background: var(--bg-glass);
+    padding: var(--spacing-lg);
+    margin: var(--spacing-xl) 0;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  }
+
+  .post-content :global(blockquote p) {
+    margin: 0;
+    font-style: italic;
+    color: var(--text-primary);
+  }
+
+  .post-content :global(img) {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-lg);
+    margin: var(--spacing-xl) 0;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .post-content :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--spacing-xl) 0;
+    background: var(--bg-glass);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .post-content :global(th),
+  .post-content :global(td) {
+    padding: var(--spacing-md);
+    text-align: left;
+    border-bottom: 1px solid var(--border-primary);
+  }
+
+  .post-content :global(th) {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  .post-content :global(td) {
+    color: var(--text-secondary);
+  }
+
+  .post-footer {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .author-section {
+    padding: var(--spacing-2xl);
+    margin-bottom: var(--spacing-xl);
+  }
+
+  .author-info {
+    display: flex;
+    gap: var(--spacing-lg);
+    align-items: flex-start;
+  }
+
+  .author-avatar {
+    flex-shrink: 0;
+  }
+
+  .avatar-placeholder {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--primary-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+  }
+
+  .author-details h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-md);
+    color: var(--text-primary);
+  }
+
+  .author-details p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .author-links {
+    display: flex;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+  }
+
+  .author-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  .author-link:hover {
+    color: var(--text-primary);
+    border-color: var(--border-secondary);
+    background: var(--bg-glass);
+  }
+
+  .post-navigation {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+  }
+
+  .nav-back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: var(--spacing-md) var(--spacing-lg);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  .nav-back:hover {
+    color: var(--text-primary);
+    border-color: var(--border-secondary);
+    background: var(--bg-glass);
+    transform: translateX(-4px);
+  }
+
+  .related-posts {
+    margin-top: var(--spacing-2xl);
+  }
+
+  .section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+    color: var(--text-primary);
+  }
+
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+  }
+
+  .related-card {
+    padding: var(--spacing-xl);
+    transition: all 0.3s ease;
+  }
+
+  .related-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .related-title {
+    margin-bottom: var(--spacing-md);
+  }
+
+  .related-title a {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.3;
+    transition: all 0.2s ease;
+  }
+
+  .related-title a:hover {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .related-description {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .related-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+  }
+
+  .tags {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 768px) {
+    .breadcrumbs {
+      font-size: 0.8rem;
+    }
+
+    .breadcrumb-current {
+      max-width: 150px;
+    }
+
+    .post-meta {
+      flex-direction: column;
+      gap: var(--spacing-md);
+    }
+
+    .post-content {
+      padding: var(--spacing-lg);
+    }
+
+    .author-info {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .author-links {
+      justify-content: center;
+    }
+
+    .related-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .post-tags {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .author-links {
+      flex-direction: column;
+    }
+  }
+</style>

@@ -1,0 +1,1022 @@
+---
+import BlogLayout from '../layouts/BlogLayout.astro';
+import { getCollection } from 'astro:content';
+
+const ctfPosts = await getCollection('blog', ({ data }) => {
+  return data.draft !== true && data.category === 'ctf' && data.type !== 'created-ctf';
+});
+
+const sortedCTFs = ctfPosts.sort((a, b) => 
+  new Date(b.data.publishDate).getTime() - new Date(a.data.publishDate).getTime()
+);
+
+// Agrupar por tags para mostrar categorías
+const ctfCategories = sortedCTFs.reduce((acc, post) => {
+  post.data.tags.forEach(tag => {
+    if (!acc[tag]) {
+      acc[tag] = [];
+    }
+    acc[tag].push(post);
+  });
+  return acc;
+}, {});
+
+// Obtener CTFs creados por mí (usando type: "created-ctf")
+const myCtfPosts = await getCollection('blog', ({ data }) => {
+  return data.draft !== true && data.type === 'created-ctf';
+});
+
+const labProjects = [
+  {
+    name: "PCAP Analyzer AI",
+    inspiration: "Análisis forense de tráfico en CTFs",
+    technologies: ["Python", "Scapy", "Ollama", "Wireshark"],
+    description: "Herramienta que usa IA local para detectar patrones sospechosos en capturas de red.",
+    link: "#",
+    github: "https://github.com/oscaar90/pcap-analyzer-ai"
+  },
+  {
+    name: "PassForge",
+    inspiration: "Necesidad de contraseñas seguras en pentesting",
+    technologies: ["Python", "Flask", "Secrets", "Bootstrap"],
+    description: "Generador de contraseñas local sin dependencias externas.",
+    link: "/blog/home-herramientas-passforge",
+    github: "https://github.com/oscaar90/PassForge"
+  }
+];
+---
+
+<BlogLayout title="CTFs" description="Writeups, retos creados y proyectos inspirados en Capture The Flag">
+  <div class="ctfs-page">
+    <div class="container">
+      <div class="page-header">
+        <h1 class="page-title gradient-text animate-fade-in-up">CTF Universe</h1>
+        <p class="page-subtitle animate-fade-in-up">
+          Writeups, retos creados y proyectos nacidos de la curiosidad técnica
+        </p>
+      </div>
+
+      <div class="ctf-stats glass-card animate-fade-in-up">
+        <div class="stat">
+          <div class="stat-number gradient-text">{sortedCTFs.length}</div>
+          <div class="stat-label">Writeups</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number gradient-text">{myCtfPosts.length}</div>
+          <div class="stat-label">Mis CTFs</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number gradient-text">{labProjects.length}</div>
+          <div class="stat-label">Proyectos Lab</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number gradient-text">5</div>
+          <div class="stat-label">Categorías</div>
+        </div>
+      </div>
+
+      <!-- Navegación interna -->
+      <nav class="section-nav glass-card">
+        <a href="#writeups" class="nav-item active" data-section="writeups">
+          <span class="nav-icon">🧠</span>
+          Writeups
+        </a>
+        <a href="#my-ctfs" class="nav-item" data-section="my-ctfs">
+          <span class="nav-icon">🎯</span>
+          Mis CTFs
+        </a>
+        <a href="#lab" class="nav-item" data-section="lab">
+          <span class="nav-icon">🧪</span>
+          Laboratorio
+        </a>
+      </nav>
+
+      <!-- Sección 1: Writeups -->
+      <section id="writeups" class="ctf-section active">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-icon">🧠</span>
+            Writeups
+          </h2>
+          <p class="section-description">
+            Documentación técnica de retos CTF resueltos con metodología y herramientas
+          </p>
+        </div>
+
+        <div class="writeups-grid">
+          {sortedCTFs.map((ctf, index) => (
+            <article class="writeup-card glass-card animate-fade-in-up" style={`animation-delay: ${index * 0.1}s`}>
+              <div class="card-header">
+                <div class="platform-info">
+                  <span class="platform-badge">
+                    {ctf.data.tags.includes('hackthebox') ? 'HTB' : 
+                     ctf.data.tags.includes('thehackerslabs') ? 'THL' : 'CTF'}
+                  </span>
+                  <span class="difficulty-badge" data-difficulty={ctf.data.difficulty || 'medium'}>
+                    {(ctf.data.difficulty || 'medium').toUpperCase()}
+                  </span>
+                </div>
+                <time class="writeup-date">
+                  {ctf.data.publishDate.toLocaleDateString('es-ES', { 
+                    year: 'numeric', 
+                    month: 'short',
+                    day: 'numeric'
+                  })}
+                </time>
+              </div>
+              
+              <h3 class="writeup-title">
+                <a href={`/blog/${ctf.slug}`}>{ctf.data.title}</a>
+              </h3>
+              
+              <p class="writeup-summary">{ctf.data.description}</p>
+              
+              <div class="technical-tags">
+                {ctf.data.tags.slice(0, 4).map(tag => (
+                  <span class="tech-tag">#{tag}</span>
+                ))}
+              </div>
+              
+              <div class="writeup-footer">
+                <div class="reading-info">
+                  {ctf.data.readingTime && (
+                    <span class="reading-time">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12,6 12,12 16,14"/>
+                      </svg>
+                      {ctf.data.readingTime}
+                    </span>
+                  )}
+                </div>
+                <a href={`/blog/${ctf.slug}`} class="read-writeup-btn">
+                  Leer writeup
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m9 18 6-6-6-6"/>
+                  </svg>
+                </a>
+              </div>
+            </article>
+          ))}
+
+          {sortedCTFs.length === 0 && (
+            <div class="empty-state">
+              <div class="empty-icon">🧠</div>
+              <h3>Próximamente...</h3>
+              <p>Estoy documentando mis primeros writeups técnicos.</p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <!-- Sección 2: Mis CTFs -->
+      <section id="my-ctfs" class="ctf-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-icon">🎯</span>
+            Mis CTFs
+          </h2>
+          <p class="section-description">
+            Retos y máquinas que he creado para la comunidad
+          </p>
+        </div>
+
+        <div class="my-ctfs-grid">
+          {myCtfPosts.map((ctf, index) => (
+            <article class="my-ctf-card glass-card animate-fade-in-up" style={`animation-delay: ${index * 0.1}s`}>
+              <div class="card-header">
+                <div class="ctf-info">
+                  <span class="creator-badge">CREADO POR MÍ</span>
+                  <span class="difficulty-badge" data-difficulty={ctf.data.difficulty || 'medium'}>
+                    {(ctf.data.difficulty || 'medium').toUpperCase()}
+                  </span>
+                </div>
+                {ctf.data.tags.includes('thehackerslabs') && (
+                  <span class="platform-special">THL</span>
+                )}
+              </div>
+              
+              <h3 class="ctf-title">{ctf.data.title}</h3>
+              
+              <p class="ctf-description">{ctf.data.description}</p>
+              
+              <div class="techniques-section">
+                <h4>Técnicas implicadas:</h4>
+                <div class="techniques-list">
+                  {ctf.data.tags.slice(0, 4).map(technique => (
+                    <span class="technique-tag">{technique}</span>
+                  ))}
+                </div>
+              </div>
+              
+              <div class="ctf-actions">
+                <a href={`/blog/${ctf.slug}`} class="ctf-btn primary">
+                  Ver walkthrough
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                    <polyline points="15,3 21,3 21,9"/>
+                    <line x1="10" y1="14" x2="21" y2="3"/>
+                  </svg>
+                </a>
+              </div>
+            </article>
+          ))}
+
+          <div class="coming-soon-card glass-card">
+            <div class="coming-soon-content">
+              <div class="coming-soon-icon">⚡</div>
+              <h3>Más retos en camino</h3>
+              <p>Estoy preparando nuevos challenges con técnicas avanzadas y escenarios realistas.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sección 3: Laboratorio Personal -->
+      <section id="lab" class="ctf-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-icon">🧪</span>
+            Laboratorio Personal
+          </h2>
+          <p class="section-description">
+            Proyectos nacidos de ideas y aprendizajes en CTFs
+          </p>
+        </div>
+
+        <div class="lab-projects-grid">
+          {labProjects.map((project, index) => (
+            <article class="lab-project-card glass-card animate-fade-in-up" style={`animation-delay: ${index * 0.1}s`}>
+              <div class="project-header">
+                <div class="project-type">
+                  <span class="lab-badge">LAB PROJECT</span>
+                </div>
+              </div>
+              
+              <h3 class="project-title">{project.name}</h3>
+              
+              <div class="inspiration-section">
+                <h4>💡 Inspirado en:</h4>
+                <p class="inspiration-text">{project.inspiration}</p>
+              </div>
+              
+              <p class="project-description">{project.description}</p>
+              
+              <div class="tech-stack">
+                <h4>Stack:</h4>
+                <div class="tech-list">
+                  {project.technologies.map(tech => (
+                    <span class="tech-badge">{tech}</span>
+                  ))}
+                </div>
+              </div>
+              
+              <div class="project-actions">
+                {project.link !== '#' && (
+                  <a href={project.link} class="project-btn primary">
+                    Ver post
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                      <polyline points="14,2 14,8 20,8"/>
+                      <line x1="16" y1="13" x2="8" y2="13"/>
+                      <line x1="16" y1="17" x2="8" y2="17"/>
+                      <polyline points="10,9 9,9 8,9"/>
+                    </svg>
+                  </a>
+                )}
+                <a href={project.github} target="_blank" rel="noopener" class="project-btn secondary">
+                  GitHub
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                  </svg>
+                </a>
+              </div>
+            </article>
+          ))}
+
+          <div class="lab-idea-card glass-card">
+            <div class="idea-content">
+              <div class="idea-icon">💭</div>
+              <h3>¿Tienes una idea?</h3>
+              <p>Si has visto algún writeup que te ha inspirado un proyecto, compártelo conmigo.</p>
+              <a href="/contact" class="idea-btn">Contactar</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</BlogLayout>
+
+<style>
+  .ctfs-page {
+    padding: var(--spacing-2xl) 0;
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+  }
+
+  .page-title {
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-weight: 700;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .page-subtitle {
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .ctf-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--spacing-lg);
+    padding: var(--spacing-xl);
+    margin-bottom: var(--spacing-2xl);
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .stat-label {
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+
+  /* Navegación interna */
+  .section-nav {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-2xl);
+    border-radius: var(--radius-xl);
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+  }
+
+  .nav-item:hover {
+    color: var(--text-primary);
+    background: var(--bg-glass);
+    border-color: var(--border-primary);
+  }
+
+  .nav-item.active {
+    color: var(--text-primary);
+    background: var(--primary-gradient);
+    border-color: transparent;
+  }
+
+  .nav-icon {
+    font-size: 1.2rem;
+  }
+
+  /* Secciones */
+  .ctf-section {
+    display: none;
+    margin-bottom: var(--spacing-2xl);
+  }
+
+  .ctf-section.active {
+    display: block;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+  }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-md);
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .section-icon {
+    font-size: 2rem;
+  }
+
+  .section-description {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* Writeups Grid */
+  .writeups-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: var(--spacing-lg);
+  }
+
+  .writeup-card {
+    padding: var(--spacing-xl);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .writeup-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .platform-info {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+  }
+
+  .platform-badge {
+    padding: 4px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: rgba(59, 130, 246, 0.2);
+    color: #93C5FD;
+  }
+
+  .difficulty-badge {
+    padding: 4px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .difficulty-badge[data-difficulty="easy"] {
+    background: rgba(34, 197, 94, 0.2);
+    color: #86EFAC;
+  }
+
+  .difficulty-badge[data-difficulty="medium"] {
+    background: rgba(245, 158, 11, 0.2);
+    color: #FCD34D;
+  }
+
+  .difficulty-badge[data-difficulty="hard"] {
+    background: rgba(239, 68, 68, 0.2);
+    color: #FCA5A5;
+  }
+
+  .writeup-date {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+  }
+
+  .writeup-title {
+    margin-bottom: var(--spacing-md);
+  }
+
+  .writeup-title a {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.3;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .writeup-title a:hover {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .writeup-summary {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-lg);
+    font-size: 1rem;
+  }
+
+  .technical-tags {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .tech-tag {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 4px 8px;
+    background: var(--bg-glass);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-sm);
+  }
+
+  .writeup-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+  }
+
+  .reading-info {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+  }
+
+  .reading-time {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    color: var(--text-muted);
+    font-size: 0.875rem;
+  }
+
+  .read-writeup-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    color: var(--text-primary);
+    text-decoration: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    background: var(--bg-glass);
+  }
+
+  .read-writeup-btn:hover {
+    border-color: var(--border-secondary);
+    background: rgba(59, 130, 246, 0.1);
+    transform: translateX(4px);
+  }
+
+  /* Mis CTFs Grid */
+  .my-ctfs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: var(--spacing-lg);
+  }
+
+  .my-ctf-card {
+    padding: var(--spacing-xl);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-left: 4px solid transparent;
+    border-image: linear-gradient(135deg, #10B981 0%, #059669 100%) 1;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .my-ctf-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .ctf-info {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+  }
+
+  .creator-badge {
+    padding: 4px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: rgba(16, 185, 129, 0.2);
+    color: #6EE7B7;
+  }
+
+  .platform-special {
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 0.7rem;
+    font-weight: 600;
+    background: rgba(139, 92, 246, 0.2);
+    color: #C4B5FD;
+  }
+
+  .ctf-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .ctf-description {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .techniques-section h4 {
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .techniques-list {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .technique-tag {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 4px 10px;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: var(--radius-sm);
+  }
+
+  .ctf-actions {
+    display: flex;
+    gap: var(--spacing-md);
+  }
+
+  .ctf-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    text-decoration: none;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .ctf-btn.primary {
+    color: white;
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    border: none;
+  }
+
+  .ctf-btn.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+  }
+
+  .coming-soon-card {
+    padding: var(--spacing-2xl);
+    text-align: center;
+    border: 2px dashed var(--border-primary);
+    background: rgba(59, 130, 246, 0.05);
+  }
+
+  .coming-soon-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+  }
+
+  .coming-soon-icon {
+    font-size: 3rem;
+    opacity: 0.7;
+  }
+
+  .coming-soon-content h3 {
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+  .coming-soon-content p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* Laboratorio Grid */
+  .lab-projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: var(--spacing-lg);
+  }
+
+  .lab-project-card {
+    padding: var(--spacing-xl);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-left: 4px solid transparent;
+    border-image: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%) 1;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .lab-project-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .project-header {
+    margin-bottom: var(--spacing-md);
+  }
+
+  .lab-badge {
+    padding: 4px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: rgba(139, 92, 246, 0.2);
+    color: #C4B5FD;
+  }
+
+  .project-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .inspiration-section {
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .inspiration-section h4 {
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .inspiration-text {
+    color: var(--text-secondary);
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  .project-description {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .tech-stack h4 {
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .tech-list {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .tech-badge {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 4px 10px;
+    background: rgba(139, 92, 246, 0.1);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: var(--radius-sm);
+  }
+
+  .project-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+  }
+
+  .project-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    text-decoration: none;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .project-btn.primary {
+    color: white;
+    background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+    border: none;
+  }
+
+  .project-btn.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+  }
+
+  .project-btn.secondary {
+    color: var(--text-secondary);
+    border: 1px solid var(--border-primary);
+    background: var(--bg-glass);
+  }
+
+  .project-btn.secondary:hover {
+    color: var(--text-primary);
+    border-color: var(--border-secondary);
+    background: rgba(139, 92, 246, 0.1);
+  }
+
+  .lab-idea-card {
+    padding: var(--spacing-2xl);
+    text-align: center;
+    border: 2px dashed var(--border-primary);
+    background: rgba(139, 92, 246, 0.05);
+  }
+
+  .idea-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+  }
+
+  .idea-icon {
+    font-size: 3rem;
+    opacity: 0.7;
+  }
+
+  .idea-content h3 {
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+  .idea-content p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .idea-btn {
+    color: var(--text-primary);
+    text-decoration: none;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  .idea-btn:hover {
+    background: var(--primary-gradient);
+    color: white;
+    border-color: transparent;
+  }
+
+  .empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: var(--spacing-2xl);
+    color: var(--text-muted);
+  }
+
+  .empty-icon {
+    font-size: 4rem;
+    margin-bottom: var(--spacing-lg);
+    opacity: 0.5;
+  }
+
+  .empty-state h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-md);
+    color: var(--text-primary);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .writeups-grid,
+    .my-ctfs-grid,
+    .lab-projects-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .section-nav {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .ctf-stats {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .project-actions,
+    .ctf-actions {
+      flex-direction: column;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .ctf-stats {
+      grid-template-columns: 1fr;
+    }
+
+    .platform-info {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--spacing-xs);
+    }
+  }
+</style>
+
+<script>
+  // Navegación entre secciones
+  document.addEventListener('DOMContentLoaded', function() {
+    const navItems = document.querySelectorAll('.nav-item');
+    const sections = document.querySelectorAll('.ctf-section');
+    
+    navItems.forEach(function(item) {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Remover clase active de todos los nav items
+        navItems.forEach(function(nav) {
+          nav.classList.remove('active');
+        });
+        
+        // Ocultar todas las secciones
+        sections.forEach(function(section) {
+          section.classList.remove('active');
+        });
+        
+        // Activar el nav item clickeado
+        this.classList.add('active');
+        
+        // Mostrar la sección correspondiente
+        const targetSection = this.getAttribute('data-section');
+        const targetElement = document.getElementById(targetSection);
+        if (targetElement) {
+          targetElement.classList.add('active');
+        }
+      });
+    });
+    
+    // Manejar navegación por URL hash
+    function handleHashChange() {
+      const hash = window.location.hash.substring(1);
+      if (hash) {
+        const targetNav = document.querySelector(`[data-section="${hash}"]`);
+        if (targetNav) {
+          targetNav.click();
+        }
+      }
+    }
+    
+    // Escuchar cambios en el hash
+    window.addEventListener('hashchange', handleHashChange);
+    
+    // Manejar hash inicial
+    handleHashChange();
+  });
+</script>

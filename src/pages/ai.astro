@@ -1,0 +1,255 @@
+---
+import BlogLayout from '../layouts/BlogLayout.astro';
+import { getCollection } from 'astro:content';
+
+const aiPosts = await getCollection('blog', ({ data }) => {
+  return data.draft !== true && data.category === 'ai';
+});
+
+const sortedPosts = aiPosts.sort((a, b) => 
+  new Date(b.data.publishDate).getTime() - new Date(a.data.publishDate).getTime()
+);
+---
+
+<BlogLayout title="Inteligencia Artificial" description="Posts sobre IA local, machine learning y automatización inteligente">
+  <div class="category-page">
+    <div class="container">
+      <div class="page-header">
+        <h1 class="page-title gradient-text animate-fade-in-up">Inteligencia Artificial</h1>
+        <p class="page-subtitle animate-fade-in-up">
+          Posts sobre IA local, machine learning y automatización inteligente
+        </p>
+      </div>
+
+      <div class="posts-stats glass-card animate-fade-in-up">
+        <div class="stat">
+          <div class="stat-number gradient-text">{sortedPosts.length}</div>
+          <div class="stat-label">Proyectos y Posts de IA</div>
+        </div>
+      </div>
+
+      <section class="content-section">
+        <div class="content-tabs">
+          <button class="tab-btn active" data-tab="all">Todo</button>
+          <button class="tab-btn" data-tab="projects">Proyectos</button>
+          <button class="tab-btn" data-tab="posts">Posts/Noticias</button>
+        </div>
+        
+        <div class="posts-grid">
+          {sortedPosts.map((post, index) => (
+            <article class="post-card glass-card animate-fade-in-up" style={`animation-delay: ${index * 0.1}s`}>
+              <div class="card-header">
+                <span class="category-tag" data-category="ai">
+                  {post.data.type === 'project' ? 'PROYECTO IA' : 'POST IA'}
+                </span>
+                <time class="post-date" datetime={post.data.publishDate.toISOString()}>
+                  {post.data.publishDate.toLocaleDateString('es-ES', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                  })}
+                </time>
+              </div>
+              
+              <h3 class="post-title">
+                <a href={`/blog/${post.slug}`}>{post.data.title}</a>
+              </h3>
+              
+              <p class="post-description">{post.data.description}</p>
+              
+              <div class="post-footer">
+                <div class="tags">
+                  {post.data.tags.slice(0, 3).map(tag => (
+                    <span class="tag">#{tag}</span>
+                  ))}
+                </div>
+                {post.data.readingTime && (
+                  <span class="reading-time">{post.data.readingTime}</span>
+                )}
+              </div>
+            </article>
+          ))}
+        </div>
+        
+        {sortedPosts.length === 0 && (
+          <div class="empty-state">
+            <div class="empty-icon">🤖</div>
+            <h3>Próximamente...</h3>
+            <p>Estoy preparando más contenido sobre IA y automatización.</p>
+          </div>
+        )}
+      </section>
+    </div>
+  </div>
+</BlogLayout>
+
+<style>
+  .category-page {
+    padding: var(--spacing-2xl) 0;
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+  }
+
+  .page-title {
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-weight: 700;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .page-subtitle {
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .posts-stats {
+    display: flex;
+    justify-content: center;
+    padding: var(--spacing-xl);
+    margin-bottom: var(--spacing-2xl);
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .stat-label {
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: var(--spacing-lg);
+  }
+
+  .post-card {
+    padding: var(--spacing-xl);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .post-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .category-tag {
+    padding: 6px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: rgba(139, 92, 246, 0.2);
+    color: #C4B5FD;
+  }
+
+  .post-date {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+  }
+
+  .post-title {
+    margin-bottom: var(--spacing-md);
+  }
+
+  .post-title a {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.3;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .post-title a:hover {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .post-description {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .post-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+  }
+
+  .tags {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 4px 8px;
+    background: var(--bg-glass);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-sm);
+  }
+
+  .reading-time {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: var(--spacing-2xl);
+    color: var(--text-muted);
+  }
+
+  .empty-icon {
+    font-size: 4rem;
+    margin-bottom: var(--spacing-lg);
+    opacity: 0.5;
+  }
+
+  .empty-state h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-md);
+    color: var(--text-primary);
+  }
+
+  @media (max-width: 768px) {
+    .posts-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
