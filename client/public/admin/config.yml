@@ -1,0 +1,51 @@
+backend:
+  name: git-gateway
+  branch: main
+
+# Opcional: configuración local para desarrollo
+local_backend: true
+
+media_folder: "client/public/images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "noticias"
+    label: "Noticias"
+    folder: "client/public/content/noticias"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Título", name: "title", widget: "string" }
+      - { label: "Fecha", name: "date", widget: "datetime", format: "YYYY-MM-DD" }
+      - { label: "Slug", name: "slug", widget: "string" }
+      - { label: "Extracto", name: "excerpt", widget: "text", required: false }
+      - { label: "Contenido", name: "body", widget: "markdown" }
+
+  - name: "writeups"
+    label: "Writeups"
+    folder: "client/public/content/writeups"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Título", name: "title", widget: "string" }
+      - { label: "Fecha", name: "date", widget: "datetime", format: "YYYY-MM-DD" }
+      - { label: "Slug", name: "slug", widget: "string" }
+      - { label: "Categoría", name: "category", widget: "string", required: false }
+      - { label: "Dificultad", name: "difficulty", widget: "select", options: ["Easy", "Medium", "Hard"], required: false }
+      - { label: "Extracto", name: "excerpt", widget: "text", required: false }
+      - { label: "Contenido", name: "body", widget: "markdown" }
+
+  - name: "proyectos"
+    label: "Proyectos"
+    folder: "client/public/content/proyectos"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Título", name: "title", widget: "string" }
+      - { label: "Fecha", name: "date", widget: "datetime", format: "YYYY-MM-DD" }
+      - { label: "Slug", name: "slug", widget: "string" }
+      - { label: "Tecnologías", name: "tech", widget: "list", required: false }
+      - { label: "Estado", name: "status", widget: "select", options: ["En desarrollo", "Completado", "En pausa"], required: false }
+      - { label: "GitHub", name: "github", widget: "string", required: false }
+      - { label: "Extracto", name: "excerpt", widget: "text", required: false }
+      - { label: "Contenido", name: "body", widget: "markdown" }
