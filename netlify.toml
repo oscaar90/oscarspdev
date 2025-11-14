@@ -1,17 +1,17 @@
 [build]
-  # Comando de build
-  command = "npm run build"
-  
-  # Directorio de publicación
-  publish = "dist/public"
+  command = "npm install && npm run build"
+  publish = "dist"
 
-# Configuración para SPA (Single Page Application)
+[build.environment]
+  NODE_VERSION = "22"
+
+# Configuración para SPA routing
 [[redirects]]
   from = "/*"
-  to = "/index.html"
-  status = 200
+  to = "/404"
+  status = 404
 
-# Configuración de headers para seguridad y rendimiento
+# Headers de seguridad
 [[headers]]
   for = "/*"
   [headers.values]
@@ -31,7 +31,3 @@
   for = "/images/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
-
-# Configuración de Netlify Identity para Decap CMS
-[build.environment]
-  NODE_VERSION = "22"
