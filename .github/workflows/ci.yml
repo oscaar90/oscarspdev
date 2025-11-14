@@ -18,45 +18,31 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'pnpm'
+          cache: 'npm'
 
       - name: Verify setup
         run: |
           echo "Node version: $(node --version)"
-          echo "pnpm version: $(pnpm --version)"
           echo "npm version: $(npm --version)"
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile --prefer-offline
-
-      - name: Verify TypeScript installation
-        run: pnpm exec tsc --version
-
-      - name: TypeScript check
-        run: pnpm check
+        run: npm ci
 
       - name: Build project
-        run: pnpm build
+        run: npm run build
 
       - name: Verify build output
         run: |
           echo "Build output structure:"
           ls -la dist/
           echo ""
-          echo "Public folder:"
-          ls -la dist/public/
-          echo ""
           echo "Checking for required files..."
-          test -f dist/public/index.html && echo "✓ index.html exists"
-          test -d dist/public/assets && echo "✓ assets directory exists"
-          test -d dist/public/content && echo "✓ content directory exists"
+          test -f dist/index.html && echo "✓ index.html exists"
+          test -d dist/_astro && echo "✓ assets directory exists"
 
       - name: Upload build artifacts
         if: success()
