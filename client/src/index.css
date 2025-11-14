@@ -169,16 +169,119 @@
     box-shadow: 0 0 10px oklch(0.7 0.15 230 / 0.3),
                 0 0 20px oklch(0.7 0.15 230 / 0.2),
                 inset 0 0 10px oklch(0.7 0.15 230 / 0.1);
+    animation: neon-pulse 3s ease-in-out infinite;
   }
-  
+
   .neon-glow {
     box-shadow: 0 0 15px oklch(0.7 0.15 230 / 0.4),
                 0 0 30px oklch(0.7 0.15 230 / 0.2);
+    animation: glow-pulse 2s ease-in-out infinite;
   }
-  
+
   .neon-text {
     color: oklch(0.7 0.15 230);
-    text-shadow: 0 0 10px oklch(0.7 0.15 230 / 0.5);
+    text-shadow: 0 0 10px oklch(0.7 0.15 230 / 0.5),
+                 0 0 20px oklch(0.7 0.15 230 / 0.3);
+    animation: text-flicker 4s linear infinite;
+  }
+
+  /* Animaciones tech */
+  @keyframes neon-pulse {
+    0%, 100% {
+      box-shadow: 0 0 10px oklch(0.7 0.15 230 / 0.3),
+                  0 0 20px oklch(0.7 0.15 230 / 0.2),
+                  inset 0 0 10px oklch(0.7 0.15 230 / 0.1);
+    }
+    50% {
+      box-shadow: 0 0 15px oklch(0.7 0.15 230 / 0.5),
+                  0 0 30px oklch(0.7 0.15 230 / 0.3),
+                  inset 0 0 15px oklch(0.7 0.15 230 / 0.2);
+    }
+  }
+
+  @keyframes glow-pulse {
+    0%, 100% {
+      box-shadow: 0 0 15px oklch(0.7 0.15 230 / 0.4),
+                  0 0 30px oklch(0.7 0.15 230 / 0.2);
+    }
+    50% {
+      box-shadow: 0 0 25px oklch(0.7 0.15 230 / 0.6),
+                  0 0 50px oklch(0.7 0.15 230 / 0.3);
+    }
+  }
+
+  @keyframes text-flicker {
+    0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+      text-shadow: 0 0 10px oklch(0.7 0.15 230 / 0.5),
+                   0 0 20px oklch(0.7 0.15 230 / 0.3);
+    }
+    20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+      text-shadow: none;
+    }
+  }
+
+  /* Grid tech background */
+  .tech-grid {
+    background-image:
+      linear-gradient(oklch(0.7 0.15 230 / 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, oklch(0.7 0.15 230 / 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+
+  /* Scanline effect */
+  .scanlines::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      to bottom,
+      transparent 50%,
+      oklch(0.7 0.15 230 / 0.02) 51%
+    );
+    background-size: 100% 4px;
+    pointer-events: none;
+    animation: scanline 8s linear infinite;
+  }
+
+  @keyframes scanline {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(100%); }
+  }
+
+  /* Código/Terminal effect */
+  .terminal-text {
+    font-family: 'Courier New', monospace;
+    color: oklch(0.7 0.15 230);
+    text-shadow: 0 0 5px oklch(0.7 0.15 230 / 0.5);
+  }
+
+  /* Hover effect para links */
+  .tech-link {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tech-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg,
+      transparent,
+      oklch(0.7 0.15 230),
+      transparent
+    );
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+
+  .tech-link:hover::after {
+    transform: translateX(100%);
   }
 }
 
