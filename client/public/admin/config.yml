@@ -5,6 +5,8 @@ backend:
   # Netlify actúa como proxy OAuth (gratis)
   base_url: https://api.netlify.com
   auth_endpoint: auth
+  # Site ID de Netlify (Project ID)
+  app_id: 453c5a6a-8e26-40a0-aa23-d061012590d0
 
 # Opcional: configuración local para desarrollo
 local_backend: true
