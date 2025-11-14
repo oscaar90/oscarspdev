@@ -1,6 +1,10 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: oscaar90/oscarspdev
   branch: main
+  # Netlify actúa como proxy OAuth (gratis)
+  base_url: https://api.netlify.com
+  auth_endpoint: auth
 
 # Opcional: configuración local para desarrollo
 local_backend: true
