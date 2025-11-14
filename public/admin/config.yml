@@ -1,0 +1,30 @@
+backend:
+  name: github
+  repo: oscaar90/oscarspdev
+  branch: main
+  base_url: https://api.netlify.com
+  auth_endpoint: auth
+
+# Habilitar edición local con npx decap-server
+local_backend: true
+
+# Configuración de medios
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
+
+# Colecciones
+collections:
+  # Posts / Writeups
+  - name: "posts"
+    label: "Posts"
+    folder: "src/content/posts"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Título", name: "title", widget: "string" }
+      - { label: "Fecha de Publicación", name: "published", widget: "datetime", format: "YYYY-MM-DD" }
+      - { label: "Borrador", name: "draft", widget: "boolean", default: false, required: false }
+      - { label: "Descripción", name: "description", widget: "string", required: false }
+      - { label: "Tags", name: "tags", widget: "list", default: ["writeup"] }
+      - { label: "Serie", name: "series", widget: "string", required: false, hint: "Nombre de la serie si este post pertenece a una" }
+      - { label: "Contenido", name: "body", widget: "markdown" }
