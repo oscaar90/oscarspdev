@@ -1,0 +1,141 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Kanban">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h1>📊 Vista Kanban</h1>
+    <a href="/nuevo" class="btn">➕ Nuevo Proyecto</a>
+  </div>
+
+  <div id="kanban-board" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+    <div class="kanban-column">
+      <h3 class="column-header" style="background: #dbeafe;">💡 Ideas</h3>
+      <div class="column-content" data-estado="idea"></div>
+    </div>
+
+    <div class="kanban-column">
+      <h3 class="column-header" style="background: #fef3c7;">🔬 Prototipos</h3>
+      <div class="column-content" data-estado="prototipo"></div>
+    </div>
+
+    <div class="kanban-column">
+      <h3 class="column-header" style="background: #dcfce7;">🚀 En Progreso</h3>
+      <div class="column-content" data-estado="en_progreso"></div>
+    </div>
+
+    <div class="kanban-column">
+      <h3 class="column-header" style="background: #fee2e2;">🚫 Bloqueados</h3>
+      <div class="column-content" data-estado="bloqueado"></div>
+    </div>
+
+    <div class="kanban-column">
+      <h3 class="column-header" style="background: #f3e8ff;">⏸️ Pausados</h3>
+      <div class="column-content" data-estado="pausado"></div>
+    </div>
+
+    <div class="kanban-column">
+      <h3 class="column-header" style="background: #d1fae5;">✅ Completados</h3>
+      <div class="column-content" data-estado="completado"></div>
+    </div>
+  </div>
+
+  <div id="loading" style="text-align: center; padding: 2rem;">
+    Cargando proyectos...
+  </div>
+
+  <style>
+    .kanban-column {
+      background: var(--bg-primary);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .column-header {
+      padding: 1rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .column-content {
+      padding: 1rem;
+      min-height: 200px;
+    }
+
+    .kanban-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .kanban-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .kanban-card h4 {
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .kanban-card p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .priority {
+      font-size: 0.75rem;
+      color: var(--warning);
+      font-weight: 500;
+    }
+  </style>
+
+  <script>
+    const API_URL = 'http://localhost:8000';
+
+    async function loadProyectos() {
+      try {
+        const response = await fetch(`${API_URL}/projects`);
+        const proyectos = await response.json();
+
+        document.getElementById('loading')!.style.display = 'none';
+
+        // Agrupar por estado
+        const columns = document.querySelectorAll('.column-content');
+        columns.forEach(column => {
+          const estado = column.getAttribute('data-estado');
+          const proyectosEstado = proyectos.filter((p: any) => p.estado === estado);
+
+          if (proyectosEstado.length === 0) {
+            column.innerHTML = '<p style="color: var(--text-secondary); font-size: 0.9rem;">No hay proyectos</p>';
+          } else {
+            column.innerHTML = proyectosEstado.map((proyecto: any) => `
+              <div class="kanban-card" onclick="window.location.href='/proyecto/${proyecto.id}'">
+                <h4>${proyecto.titulo}</h4>
+                ${proyecto.descripcion ? `<p>${proyecto.descripcion.substring(0, 80)}${proyecto.descripcion.length > 80 ? '...' : ''}</p>` : ''}
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span class="priority">Prioridad: ${proyecto.prioridad}</span>
+                  <span style="font-size: 0.75rem; color: var(--text-secondary);">
+                    ID: ${proyecto.id}
+                  </span>
+                </div>
+              </div>
+            `).join('');
+          }
+        });
+
+      } catch (error) {
+        console.error('Error al cargar proyectos:', error);
+        document.getElementById('loading')!.innerHTML = '❌ Error al cargar proyectos. Verifica que el backend esté ejecutándose.';
+      }
+    }
+
+    loadProyectos();
+  </script>
+</Layout>

@@ -1,0 +1,21 @@
+# FastAPI y servidor
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+
+# Base de datos
+sqlalchemy==2.0.23
+psycopg2-binary==2.9.9  # Para PostgreSQL (opcional)
+
+# Validación y serialización
+pydantic==2.5.0
+pydantic-settings==2.1.0
+
+# HTTP requests para webhooks
+requests==2.31.0
+
+# Bot de Telegram
+python-telegram-bot==20.7
+
+# Utilidades
+python-dotenv==1.0.0

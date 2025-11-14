@@ -1,0 +1,60 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Inicio">
+  <h1>Bienvenido a Project Manager</h1>
+  <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+    Gestiona tus proyectos personales de forma simple y efectiva
+  </p>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+    <a href="/kanban" class="card" style="text-decoration: none; color: inherit;">
+      <h2>📊 Vista Kanban</h2>
+      <p style="color: var(--text-secondary);">
+        Visualiza tus proyectos en un tablero Kanban organizado por estado
+      </p>
+    </a>
+
+    <a href="/lista" class="card" style="text-decoration: none; color: inherit;">
+      <h2>📋 Vista Lista</h2>
+      <p style="color: var(--text-secondary);">
+        Explora todos tus proyectos en una lista con filtros y búsqueda
+      </p>
+    </a>
+
+    <a href="/nuevo" class="card" style="text-decoration: none; color: inherit;">
+      <h2>➕ Nuevo Proyecto</h2>
+      <p style="color: var(--text-secondary);">
+        Crea un nuevo proyecto y comienza a trabajar en tus ideas
+      </p>
+    </a>
+  </div>
+
+  <div class="card" style="margin-top: 3rem;">
+    <h2>ℹ️ Información</h2>
+    <p style="margin-top: 1rem;">
+      <strong>API Backend:</strong>
+      <code style="background: var(--bg-secondary); padding: 0.25rem 0.5rem; border-radius: 4px;">
+        http://localhost:8000
+      </code>
+    </p>
+    <p style="margin-top: 0.5rem;">
+      <strong>Documentación API:</strong>
+      <a href="http://localhost:8000/docs" target="_blank">http://localhost:8000/docs</a>
+    </p>
+  </div>
+
+  <div class="card" style="margin-top: 1rem;">
+    <h3>🎯 Estados de Proyecto</h3>
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;">
+      <span class="badge badge-idea">Idea</span>
+      <span class="badge badge-prototipo">Prototipo</span>
+      <span class="badge badge-en_progreso">En Progreso</span>
+      <span class="badge badge-bloqueado">Bloqueado</span>
+      <span class="badge badge-pausado">Pausado</span>
+      <span class="badge badge-completado">Completado</span>
+      <span class="badge badge-archivado">Archivado</span>
+    </div>
+  </div>
+</Layout>
