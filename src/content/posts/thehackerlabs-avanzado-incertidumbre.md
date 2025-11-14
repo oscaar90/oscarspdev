@@ -7,18 +7,6 @@ tags:
   - writeup
   - writeup-THL
 ---
-
-
-- - -
-
-title: "TheHackerLabs - Avanzado : \[Incertidumbre]"
-date: 2024-11-26 08:15:00 +0200
-categories: \[CTF, Writeups]
-tags: \[CTF, Writeups, TheHackerLabs, Linux, Avanzado]
-image: /img/posts/CTF/incertidumbre/incertidumbre.png
-
-- - -
-
 📛 **Nombre:** Incertidumbre | 📈 **Dificultad:** Avanzado | 💻 **SO:** Linux | 👨‍💻 **Creador:** @Oskitaar90
 
 - - -
@@ -27,7 +15,7 @@ image: /img/posts/CTF/incertidumbre/incertidumbre.png
 
 El **CTF Incertidumbre** es un reto avanzado diseñado para poner a prueba habilidades de enumeración, explotación y escalada de privilegios en un entorno Linux. La máquina cuenta con servicios expuestos y configuraciones específicas que, al ser explotadas correctamente, permiten al jugador obtener acceso root.
 
-Este CTF fue diseñado especialmente para la comunidad de **[TheHackersLabs](https://thehackerslabs.com/)**{:target="_blank"}, con un agradecimiento especial a **CuriosidadesDeHackers** y **Condor** por su constante apoyo e inspiración.
+Este CTF fue diseñado especialmente para la comunidad de **[TheHackersLabs](https://thehackerslabs.com/)**, con un agradecimiento especial a **CuriosidadesDeHackers** y **Condor** por su constante apoyo e inspiración.
 
 - - -
 
