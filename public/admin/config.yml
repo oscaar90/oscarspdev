@@ -28,3 +28,15 @@ collections:
       - { label: "Tags", name: "tags", widget: "list", default: ["writeup"] }
       - { label: "Serie", name: "series", widget: "string", required: false, hint: "Nombre de la serie si este post pertenece a una" }
       - { label: "Contenido", name: "body", widget: "markdown" }
+
+  # Páginas
+  - name: "pages"
+    label: "Páginas"
+    files:
+      - label: "Sobre mí"
+        name: "about"
+        file: "src/pages/about.md"
+        fields:
+          - { label: "Layout", name: "layout", widget: "hidden", default: "~/layouts/MarkdownLayout.astro" }
+          - { label: "Título", name: "title", widget: "string" }
+          - { label: "Contenido", name: "body", widget: "markdown" }
