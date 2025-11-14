@@ -5,7 +5,7 @@ title: Sobre mí
 
 # Óscar Sánchez Pérez
 
-> **AIOS-Engineer** | Automatización pragmática, IA local y sistemas que no se rompen
+> **Senior IT Automation Engineer** | Automatización pragmática, IA local y sistemas que no se rompen
 
 ---
 
@@ -38,13 +38,15 @@ enfoque:
 
 ## 💼 Experiencia Profesional
 
-### **AIOS-Engineer** @ ALDI España
-*Febrero 2022 - Actualidad*
+### **Senior IT Automation Engineer** @ ALDI España
+*Febrero 2022 - Enero 2025*
 
-- Automatización de procesos IT con Python, Ansible y n8n, reduciendo tareas manuales repetitivas
-- Creación de herramientas internas para despliegue, monitorización y reporting
-- Implementación de soluciones locales de IA para soporte técnico, análisis de tickets y recomendaciones
-- Integración con ServiceNow y otros sistemas corporativos para orquestar tareas sin intervención humana
+**Misión:** Construir y evolucionar la infraestructura interna para operar de forma más fiable e inteligente, logrando una transformación medible de los procesos de negocio.
+
+- **Automatización estratégica de operaciones críticas:** Diseñé e implementé pipelines en Python, Bash y PowerShell que eliminaron **50h/mes** de trabajo manual (600h/año ≈ €30k en coste evitado) y redujeron errores operativos en un **35%**
+- **Caso destacado:** Automatización end-to-end de workflow de Procurement que procesó **37.000+ correos** sin intervención humana, reduciendo ciclos de aprobación de días a horas
+- **Observabilidad y AI-Ops aplicado:** Implementé una cultura de observabilidad con dashboards en Grafana que mejoraron la detección de incidencias en un **30%**, reduciendo presión en equipos on-call
+- **Piloto de clasificación inteligente de tickets IT:** Usando Ollama + Python, logré una reducción del **20% en tiempos de asignación**, procesando **500+ tickets/mes** con clasificación automática basada en embeddings semánticos. Prueba de concepto validada para escalado productivo
 
 ### **Administrador de Sistemas & DBA SQL** @ Logicalis Spain
 *Enero 2021 - Marzo 2022*
