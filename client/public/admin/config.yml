@@ -5,6 +5,10 @@ backend:
   # Netlify actúa como proxy OAuth (gratis)
   base_url: https://api.netlify.com
   auth_endpoint: auth
+  # IMPORTANTE: Reemplaza 'your-site-name' con el nombre de tu sitio en Netlify
+  # Lo encuentras en: app.netlify.com/sites/[ESTE-ES-TU-SITE-NAME]
+  # O en Site Settings → General → Site details → Site ID
+  site_domain: oscarsp.netlify.app
 
 # Opcional: configuración local para desarrollo
 local_backend: true
