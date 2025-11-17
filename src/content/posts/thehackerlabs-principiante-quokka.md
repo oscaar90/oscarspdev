@@ -6,9 +6,12 @@ description: Explora el desafío CTF Quokka, un reto de nivel principiante
   enfocado en vulnerabilidades de IIS y Samba en un entorno Windows.
 tags:
   - writeup
+  - writeup-THL
 series: ""
 ---
-## Introducción
+📛 **Nombre:** Quokka | 📈 **Dificultad:** Principiante | 💻 **SO:** Windows | 👨‍💻 **Creador:** Oscar
+
+# 🕵️ Resolución del CTF Quokka
 
 Bienvenidos al desafío **"Quokka"**, un CTF de nivel principiante en el que se exploran vulnerabilidades en IIS y Samba en un entorno de Windows Server. En este reto, los jugadores deben analizar servicios básicos y comprender la infraestructura para lograr su objetivo.
 
@@ -58,15 +61,9 @@ El escaneo reveló un servidor IIS y un servicio Samba.
 
 Al acceder al servidor en el puerto 80, encontramos un portal de tipo blog, con entradas sobre tecnología. No parecen tener ningún vínculo significativo, pero al observar los detalles, notamos algo interesante:
 
-
-
 ![](/images/uploads/blog1.png)
 
-
-
 Una de las entradas menciona que los encargados del proyecto "Quokka", Daniel y Luis, deben revisar un servicio secundario con privilegios. Curiosamente, estos nombres coinciden con los usuarios en la sección de contacto del portal. Aunque IIS no parece tener vulnerabilidades aquí, esta pista sugiere que podría haber algo en el servicio Samba.
-
-
 
 ![](/images/uploads/postsamba.png)
 
@@ -218,12 +215,7 @@ Nos ponemos en escucha con `nc` en el puerto 4444 y levantamos un servidor web e
 
 ![](/images/uploads/shell.png)
 
-
-
 ![](/images/uploads/nc.png)
-
-
-
 
 ## Conclusión
 
