@@ -6,6 +6,7 @@ description: Explora el desafío CTF Quokka, un reto de nivel principiante
   enfocado en vulnerabilidades de IIS y Samba en un entorno Windows.
 tags:
   - writeup
+series: ""
 ---
 ## Introducción
 
