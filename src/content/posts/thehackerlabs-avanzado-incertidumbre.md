@@ -7,7 +7,7 @@ tags:
   - writeup
   - writeup-THL
 ---
-📛 **Nombre:** Incertidumbre | 📈 **Dificultad:** Avanzado | 💻 **SO:** Linux | 👨‍💻 **Creador:** @Oskitaar90
+📛 **Nombre:** Incertidumbre | 📈 **Dificultad:** Avanzado | 💻 **SO:** Linux | 👨‍💻 **Creador:** Oscar
 
 - - -
 
