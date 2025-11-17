@@ -11,7 +11,7 @@ tags:
 
 Bienvenidos al desafío **"Quokka"**, un CTF de nivel principiante en el que se exploran vulnerabilidades en IIS y Samba en un entorno de Windows Server. En este reto, los jugadores deben analizar servicios básicos y comprender la infraestructura para lograr su objetivo.
 
-🌐 [**Web oficial del CTF: TheHackersLabs - Quokka**](https://thehackerslabs.com/quokka/){:target="_blank"}
+🌐 **[Web oficial del CTF: TheHackersLabs - Quokka](https://thehackerslabs.com/quokka/)**{:target="_blank"}
 
 ## Obteniendo Información
 
@@ -55,14 +55,19 @@ El escaneo reveló un servidor IIS y un servicio Samba.
 
 ## Análisis de IIS
 
-
 Al acceder al servidor en el puerto 80, encontramos un portal de tipo blog, con entradas sobre tecnología. No parecen tener ningún vínculo significativo, pero al observar los detalles, notamos algo interesante:
 
-![Imagen del mensaje 'source' en index.html](</img/posts/CTF/quokka/blog1.png>) 
+
+
+![](/images/uploads/blog1.png)
+
+
 
 Una de las entradas menciona que los encargados del proyecto "Quokka", Daniel y Luis, deben revisar un servicio secundario con privilegios. Curiosamente, estos nombres coinciden con los usuarios en la sección de contacto del portal. Aunque IIS no parece tener vulnerabilidades aquí, esta pista sugiere que podría haber algo en el servicio Samba.
 
-![Imagen del mensaje 'source' en index.html](</img/posts/CTF/quokka/postsamba.png>) 
+
+
+![](/images/uploads/postsamba.png)
 
 ## Análisis de Samba
 
@@ -174,6 +179,7 @@ Al descargar y analizar el archivo `mantenimiento.bat`, encontramos comentarios 
 ```
 
 El archivo tiene permisos elevados, y podemos modificarlo.
+
 ### Modificación del Script
 
 Sustituimos el contenido del archivo `mantenimiento.bat` para ejecutar una reverse shell de PowerShell:
@@ -209,9 +215,12 @@ $client.Close()
 
 Nos ponemos en escucha con `nc` en el puerto 4444 y levantamos un servidor web en Python para servir el archivo `shell.ps1`.
 
+![](/images/uploads/shell.png)
 
-![Imagen del mensaje 'source' en index.html](</img/posts/CTF/quokka/shell.png>) 
-![Imagen del mensaje 'source' en index.html](</img/posts/CTF/quokka/nc.png>) 
+
+
+![](/images/uploads/nc.png)
+
 
 
 
@@ -220,10 +229,11 @@ Nos ponemos en escucha con `nc` en el puerto 4444 y levantamos un servidor web e
 En este laboratorio, hemos explotado vulnerabilidades en IIS y Samba para obtener acceso a un sistema Windows Server. Las vulnerabilidades clave incluían una configuración incorrecta en el servicio Samba, permitiendo el acceso de `guest` con permisos de lectura y escritura, y la posibilidad de modificar un script de mantenimiento con permisos elevados. Esto nos permitió inyectar un reverse shell para ganar control sobre la máquina.
 
 Para evitar ser víctimas de estas vulnerabilidades, es fundamental:
-- Configurar adecuadamente los permisos de acceso a recursos compartidos y restringir el acceso de cuentas como `guest`.
-- Auditar y proteger los scripts de mantenimiento, especialmente aquellos que se ejecutan con permisos elevados.
-- Mantener el sistema y sus servicios actualizados con los últimos parches de seguridad.
+
+* Configurar adecuadamente los permisos de acceso a recursos compartidos y restringir el acceso de cuentas como `guest`.
+* Auditar y proteger los scripts de mantenimiento, especialmente aquellos que se ejecutan con permisos elevados.
+* Mantener el sistema y sus servicios actualizados con los últimos parches de seguridad.
 
 ## Agradecimientos
 
-Soy el creador de este laboratorio. Es mi primera máquina Windows, y he aprendido mucho en el proceso. Gracias, como siempre, a 🌐 [**TheHackersLabs**](https://thehackerslabs.com/){:target="_blank"} por su inspiración y apoyo en la comunidad de CTF. ¡Espero que disfruten resolviendo este desafío tanto como yo disfruté creándolo!
+Soy el creador de este laboratorio. Es mi primera máquina Windows, y he aprendido mucho en el proceso. Gracias, como siempre, a 🌐 **[TheHackersLabs](https://thehackerslabs.com/)** por su inspiración y apoyo en la comunidad de CTF. ¡Espero que disfruten resolviendo este desafío tanto como yo disfruté creándolo!
