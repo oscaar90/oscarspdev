@@ -14,7 +14,7 @@ series: ""
 
 Bienvenidos al desafío **"Quokka"**, un CTF de nivel principiante en el que se exploran vulnerabilidades en IIS y Samba en un entorno de Windows Server. En este reto, los jugadores deben analizar servicios básicos y comprender la infraestructura para lograr su objetivo.
 
-🌐 **[Web oficial del CTF: TheHackersLabs - Quokka](https://thehackerslabs.com/quokka/)**{:target="_blank"}
+🌐 **[Web oficial del CTF: TheHackersLabs - Quokka](https://thehackerslabs.com/quokka/)**
 
 ## Obteniendo Información
 
