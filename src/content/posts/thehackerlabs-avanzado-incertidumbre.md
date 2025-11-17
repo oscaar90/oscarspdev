@@ -1,6 +1,6 @@
 ---
 title: "TheHackerLabs - Avanzado : [Incertidumbre]"
-published: 2025-11-14
+published: 2024-11-26
 draft: false
 description: ""
 tags:
