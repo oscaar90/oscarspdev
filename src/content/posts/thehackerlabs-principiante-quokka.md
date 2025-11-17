@@ -2,8 +2,7 @@
 title: "TheHackerLabs - Principiante : [Quokka]"
 published: 2024-10-29
 draft: false
-description: Explora el desafío CTF Quokka, un reto de nivel principiante
-  enfocado en vulnerabilidades de IIS y Samba en un entorno Windows.
+description: ""
 tags:
   - writeup
   - writeup-THL
