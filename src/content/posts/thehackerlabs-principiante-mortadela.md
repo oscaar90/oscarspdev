@@ -2,7 +2,6 @@
 title: "TheHackerLabs - Principiante : [Grillo]"
 published: 2024-10-05
 tags:
-  - writeup
   - writeup-THL
 ---
 📛 **Nombre:** Grillo | 📈 **Dificultad:** Principiante | 💻 **SO:** Linux | 👨‍💻 **Creador:** CuriosidadesDeHackers y Condor
