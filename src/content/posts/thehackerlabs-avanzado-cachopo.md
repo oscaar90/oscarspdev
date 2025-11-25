@@ -3,7 +3,6 @@ title: "TheHackerLabs - Avanzado : [Cachopo]"
 published: 2024-12-08
 draft: false
 tags:
-  - writeup
   - writeup-THL
 ---
 📛 **Nombre:** Cachopo | 📈 **Dificultad:** Avanzado | 💻 **SO:** Linux | 👨‍💻 **Creador:** Oscar
