@@ -6,8 +6,8 @@ draft: false
 description: Un experimento comparativo sobre la eficacia de los formatos en
   LLMs y las reglas de oro para obtener mejores resultados.
 tags:
-  - '["Prompt Engineering"'
-  - '"LLM"'
+  - Prompt Engineering
+  - LLM
   - Experimentos
 ---
 ¿Alguna vez te has sentido como si necesitaras aprender un lenguaje de programación secreto solo para obtener una respuesta decente de una Inteligencia Artificial? En el vertiginoso mundo de los Grandes Modelos de Lenguaje (LLM), existe la creencia persistente de que cuanto más complejo y técnico sea tu "prompt" (la instrucción que le das a la IA), mejor será el resultado. Durante mucho tiempo, se nos ha dicho que estructurar nuestros pedidos como si fueran código es el Santo Grial.
