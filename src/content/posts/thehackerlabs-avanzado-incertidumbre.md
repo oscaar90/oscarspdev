@@ -4,7 +4,6 @@ published: 2024-11-26
 draft: false
 description: ""
 tags:
-  - writeup
   - writeup-THL
 ---
 📛 **Nombre:** Incertidumbre | 📈 **Dificultad:** Avanzado | 💻 **SO:** Linux | 👨‍💻 **Creador:** Oscar
