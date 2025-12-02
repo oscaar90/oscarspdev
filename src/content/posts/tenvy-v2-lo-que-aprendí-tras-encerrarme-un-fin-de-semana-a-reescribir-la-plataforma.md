@@ -15,7 +15,7 @@ tags:
 ---
 Martes, 02 de Diciembre. Acabo de publicar en LinkedIn el lanzamiento de la nueva versión de Tenvy. Pero LinkedIn es para el titular; aquí quiero contar la historia completa.
 
-Hace tres meses lancé este proyecto con un eslogan que, para mí, es una ley: "Buscar trabajo NO debería costar dinero".
+Hace tres meses lancé [este proyecto ( tenvy ) ](https://tenvy.es)con un eslogan que, para mí, es una ley: "Buscar trabajo NO debería costar dinero".
 
 La acogida de la versión 1 (v1) fue numéricamente buena para un proyecto que acaba de nacer:
 
