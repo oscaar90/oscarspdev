@@ -13,13 +13,10 @@ tags:
   - Desarrollo
   - IA
 ---
-# TENVY v2: Lo que aprendí tras encerrarme un fin de semana a reescribir la plataforma
 
-**2025-12-02 | 3 min read**
-
-*EmpleabilidadBúsqueda de EmpleoATSTenvyOptimización de CVBuild in PublicDesarrolloIA*
 
 ## Table of Contents
+
 * El valor de la imperfección (y de escuchar)
 * Crónica de un fin de semana de código
 * ¿Qué trae la v2 bajo el capó?
@@ -27,7 +24,7 @@ tags:
 * Un agradecimiento técnico
 * ¿Qué sigue?
 
----
+- - -
 
 Martes, 02 de Diciembre. Acabo de publicar en LinkedIn el lanzamiento de la nueva versión de Tenvy. Pero LinkedIn es para el titular; aquí quiero contar la historia completa.
 
@@ -44,8 +41,8 @@ Pero los números son vanidad si la experiencia de usuario falla. Y falló.
 
 Como emprendedor, a veces te obsesionas con el roadmap, con las features futuras o con el diseño perfecto. Pero la realidad te golpea cuando abres el correo. Recibí mensajes de **15 usuarios**. No eran mensajes de felicitación, eran reportes de errores:
 
-*"Oye, el login no va".*  
-*"El análisis se queda colgado a la mitad".*  
+*"Oye, el login no va".*\
+*"El análisis se queda colgado a la mitad".*\
 *"Los caracteres del ATS salen raros y no se entiende nada".*
 
 En ese momento tienes dos opciones:
@@ -66,12 +63,15 @@ Me encerré este fin de semana. Café, música y Visual Studio Code. He tocado p
 ## ¿Qué trae la v2 bajo el capó?
 
 ### 1. Estabilidad total en el Login
+
 He simplificado el proceso de autenticación. Entrar en Tenvy ahora es inmediato.
 
 ### 2. Análisis de CV robusto
+
 Ya no se "cuelga". He optimizado la forma en que procesamos el archivo para que, incluso si tu PDF es pesado o tiene un formato extraño, el sistema responda.
 
 ### 3. El problema de la "Sobrecualificación"
+
 Este es el cambio más importante. Analizando los datos de esos 570 CVs, detecté un patrón alarmante. **Mucha gente no es rechazada por falta de experiencia, sino por exceso.** Los sistemas ATS (y los reclutadores humanos) a veces descartan perfiles "caros" o "demasiado senior" antes de siquiera hablar con ellos.
 
 La v2 de Tenvy ahora **detecta explícitamente si tu perfil corre riesgo de ser descartado por estar sobrecualificado** para la oferta y te sugiere cómo adaptarlo. Ya no basta con tener experiencia; hay que mostrar la experiencia exacta que pide la oferta.
@@ -91,10 +91,11 @@ Estoy en un máster de Desarrollo con IA. Cuando lancé la v1, aplicaba IA "a lo
 **La v2 es diferente porque ahora tengo las herramientas correctas.** Structured outputs con LangChain, sistemas de fallback, OAuth bien implementado… Son cosas que aprendes en clase, pero que no entiendes de verdad hasta que las aplicas en producción con 264 usuarios esperando que todo funcione.
 
 **Stack técnico de la v2:**
-- Flask + Gunicorn + PostgreSQL
-- LangChain + Structured Outputs
-- Docker + nginx
-- OAuth Google/LinkedIn con JWT stateless
+
+* Flask + Gunicorn + PostgreSQL
+* LangChain + Structured Outputs
+* Docker + nginx
+* OAuth Google/LinkedIn con JWT stateless
 
 Si estás en el máster leyendo esto: **sí, lo de "trata los prompts como código" funciona en producción.** Y sí, vale la pena reescribir todo el domingo por la noche cuando sabes que el lunes 15 personas van a tener una mejor experiencia.
 
